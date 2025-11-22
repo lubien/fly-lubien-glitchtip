@@ -16,6 +16,7 @@ primary_region = 'gru'
   ENABLE_USER_REGISTRATION = 'false'
   CELERY_WORKER_AUTOSCALE = '1,3'
   GLITCHTIP_DOMAIN = 'https://fly-lubien-glitchtip.fly.dev'
+  ENABLE_ORGANIZATION_CREATION = 'true'
   PORT = '8000'
   VALKEY_URL = ''
 
