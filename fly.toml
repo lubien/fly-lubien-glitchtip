@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for fly-lubien-glitchtip on 2025-11-22T16:00:48Z
+# fly.toml app configuration file generated for fly-lubien-glitchtip on 2025-11-22T10:12:37-03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -6,16 +6,37 @@
 app = 'fly-lubien-glitchtip'
 primary_region = 'gru'
 
+[build]
+  image = 'glitchtip/glitchtip'
+
+[deploy]
+  release_command = './bin/run-migrate.sh'
+
+[env]
+  ENABLE_USER_REGISTRATION = 'false'
+  CELERY_WORKER_AUTOSCALE = '1,3'
+  GLITCHTIP_DOMAIN = 'https://fly-lubien-glitchtip.fly.dev'
+  PORT = '8000'
+  VALKEY_URL = ''
+
 [http_service]
+  processes = ["app"]
   internal_port = 8000
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = 'off'
   auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
+  min_machines_running = 1
+
+  [http_service.concurrency]
+    type = 'requests'
+    hard_limit = 250
+    soft_limit = 200
 
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
-  memory_mb = 1024
+
+[processes]
+  app = ""
+  worker = "./bin/run-celery-with-beat.sh"
